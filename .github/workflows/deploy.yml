@@ -38,7 +38,6 @@ jobs:
           allow_unauthenticated: true
           env_vars: |
             NODE_ENV=production
-            PORT=8080
             MONGODB_URI=${{ secrets.MONGODB_URI }}
             MONGODB_DB=${{ secrets.MONGODB_DB }}
             OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
@@ -79,7 +78,6 @@ jobs:
           allow_unauthenticated: true
           env_vars: |
             NODE_ENV=production
-            PORT=8080
             NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
             BACKEND_URL=${{ secrets.BACKEND_URL }}
             NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
