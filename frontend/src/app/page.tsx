@@ -308,7 +308,7 @@ export default function HomePage() {
   };
 
   const getModeButtonClass = (mode: AnalysisMode) => {
-    return `px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+    return `px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors whitespace-nowrap ${
       activeMode === mode 
         ? 'bg-[rgba(4,210,128,.12)] text-[color:var(--text-sub)] border border-[rgba(4,210,128,.26)]'
         : 'text-[color:var(--muted)] hover:text-[color:var(--text-sub)]'
@@ -318,7 +318,7 @@ export default function HomePage() {
   return (
     <>
       <style jsx global>{`
-        /* ===== Green Mist 2.0 tokens ===== */
+        /* ===== Mobile-First Responsive Design ===== */
         :root{
           --bg-0:#060c09;
           --bg-1:#0b0f0c; --bg-2:#0a1e12; --bg-3:#092c1b;
@@ -332,7 +332,7 @@ export default function HomePage() {
           --radius:16px;
         }
 
-        html,body{height:100%}
+        html,body{height:100%; overflow-x:hidden}
         body{
           font-family:'Inter',system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
           color:var(--text);
@@ -359,22 +359,64 @@ export default function HomePage() {
         /* Subtle glow effect like cards */
         .text-glow{text-shadow:0 0 8px rgba(4,210,128,.12)}
 
-        /* App bar */
-        .appbar{position:sticky; top:0; z-index:20; backdrop-filter:saturate(1.1) blur(10px); background:linear-gradient(180deg, rgba(12,22,17,.75), rgba(12,22,17,.35)); border-bottom:1px solid var(--chip-stroke)}
+        /* App bar - Mobile First */
+        .appbar{
+          position:sticky; top:0; z-index:20; 
+          backdrop-filter:saturate(1.1) blur(10px); 
+          background:linear-gradient(180deg, rgba(12,22,17,.75), rgba(12,22,17,.35)); 
+          border-bottom:1px solid var(--chip-stroke);
+          padding: 0.75rem 1rem;
+        }
+        @media (min-width: 768px) {
+          .appbar { padding: 0; }
+        }
 
-        /* Cards */
-        .card{background: linear-gradient(145deg,var(--card-from),var(--card-to)); border:1px solid var(--chip-stroke); box-shadow: var(--shadow); transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; border-radius: var(--radius)}
+        /* Cards - Mobile First */
+        .card{
+          background: linear-gradient(145deg,var(--card-from),var(--card-to)); 
+          border:1px solid var(--chip-stroke); 
+          box-shadow: var(--shadow); 
+          transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; 
+          border-radius: var(--radius);
+          margin: 0 0.5rem;
+        }
+        @media (min-width: 640px) {
+          .card { margin: 0; }
+        }
         .card:hover{ transform:translateY(-2px); box-shadow:0 12px 38px rgba(4,210,128,.34), inset 0 0 12px rgba(4,210,128,.18) }
 
-        /* Inputs */
-        .input{background: rgba(10,30,18,.6); border:1px solid rgba(255,255,255,.06); color:var(--text); transition:border-color .2s ease, box-shadow .2s ease, background-color .2s ease; border-radius:12px}
+        /* Inputs - Mobile optimized */
+        .input{
+          background: rgba(10,30,18,.6); 
+          border:1px solid rgba(255,255,255,.06); 
+          color:var(--text); 
+          transition:border-color .2s ease, box-shadow .2s ease, background-color .2s ease; 
+          border-radius:12px;
+          font-size: 16px; /* Prevents zoom on iOS */
+        }
         .input::placeholder{ color:var(--muted) }
-        .input:focus{ outline:0; border-color:var(--secondary); box-shadow:0 0 0 4px rgba(4,210,128,.20), 0 0 10px var(--ring); background:rgba(10,30,18,.72) }
+        .input:focus{ 
+          outline:0; 
+          border-color:var(--secondary); 
+          box-shadow:0 0 0 4px rgba(4,210,128,.20), 0 0 10px var(--ring); 
+          background:rgba(10,30,18,.72) 
+        }
         .input[aria-invalid="true"]{ border-color:#ef4444 }
         .input[aria-invalid="true"]:focus{ box-shadow:0 0 0 4px rgba(239,68,68,.25) }
 
-        /* Buttons */
-        .btn{ background:linear-gradient(145deg,var(--primary),var(--secondary)); color:#0a1e12; font-weight:700; box-shadow:0 0 10px rgba(0,255,157,.5); transition:transform .2s ease, box-shadow .2s ease, filter .2s ease, opacity .2s ease; border-radius:12px }
+        /* Buttons - Touch friendly */
+        .btn{ 
+          background:linear-gradient(145deg,var(--primary),var(--secondary)); 
+          color:#0a1e12; 
+          font-weight:700; 
+          box-shadow:0 0 10px rgba(0,255,157,.5); 
+          transition:transform .2s ease, box-shadow .2s ease, filter .2s ease, opacity .2s ease; 
+          border-radius:12px;
+          min-height: 44px; /* iOS touch target */
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
         .btn:hover{ transform: translateY(-1px) scale(1.02); box-shadow:0 0 22px rgba(0,255,157,.95) }
         .btn:disabled{ opacity:.6; cursor:not-allowed; filter:saturate(.8) }
         .btn-outline{ background:transparent; color:var(--text); border:1px solid var(--chip-stroke); box-shadow:none }
@@ -384,34 +426,55 @@ export default function HomePage() {
         .icon-glow{ filter: drop-shadow(0 0 6px var(--primary)); transition: transform .25s ease }
         .icon-glow:hover{ transform: translateY(-1px) }
 
+        /* Mobile specific optimizations */
+        @media (max-width: 640px) {
+          .hero-title { font-size: 2rem !important; line-height: 1.1; }
+          .hero-subtitle { font-size: 0.9rem !important; padding: 0 1rem; }
+          .logo-mobile { width: 5rem !important; height: 5rem !important; }
+          .mode-nav { 
+            flex-wrap: wrap; 
+            gap: 0.25rem; 
+            justify-content: center;
+            padding: 0.5rem;
+          }
+          .mode-nav button {
+            flex: 1;
+            min-width: calc(50% - 0.125rem);
+            max-width: calc(50% - 0.125rem);
+          }
+          .form-grid { grid-template-columns: 1fr !important; }
+          .features-grid { grid-template-columns: 1fr !important; }
+          .card { margin: 0 0.25rem; }
+        }
+
         @media (prefers-reduced-motion: reduce){ .card, .btn, .icon-glow{ transition:none } }
       `}</style>
 
       <div className="min-h-screen flex flex-col items-center">
         <div className="mist-overlay"></div>
         
-        {/* Header with Language Selector */}
+        {/* Header with Language Selector - Mobile optimized */}
         <header className="appbar w-full">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-end">
+          <div className="mx-auto max-w-6xl px-2 sm:px-4 lg:px-8 h-12 sm:h-14 flex items-center justify-end">
             <LanguageSelector />
           </div>
         </header>
 
         <a href="#main" className="skip-link">{t.common.backToHome}</a>
 
-        <main id="main" role="main" className="w-full mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-          {/* Hero */}
-          <section className="text-center">
-            <div className="mb-2">
-              <img src="/logo_icon.png" alt="SafestNet logo" className="mx-auto w-32 h-32 sm:w-40 sm:h-40 icon-glow" />
+        <main id="main" role="main" className="w-full mx-auto max-w-6xl px-2 sm:px-4 lg:px-8 py-4 sm:py-8 space-y-4 sm:space-y-8">
+          {/* Hero - Mobile optimized */}
+          <section className="text-center px-2">
+            <div className="mb-3 sm:mb-2">
+              <img src="/logo_icon.png" alt="SafestNet logo" className="mx-auto w-20 h-20 sm:w-32 sm:h-32 md:w-40 md:h-40 icon-glow logo-mobile" />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white text-glow">{t.home.title}</h1>
-            <p className="mt-2 text-base sm:text-lg text-white text-glow">{t.home.subtitle}</p>
+            <h1 className="hero-title text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white text-glow">{t.home.title}</h1>
+            <p className="hero-subtitle mt-2 text-sm sm:text-base lg:text-lg text-white text-glow px-4">{t.home.subtitle}</p>
           </section>
 
-          {/* Mode Navigation */}
-          <section className="flex justify-center">
-            <div className="flex items-center gap-1 p-1 rounded-lg bg-[rgba(10,30,18,.6)] border border-[rgba(4,210,128,.22)]">
+          {/* Mode Navigation - Mobile first */}
+          <section className="flex justify-center px-2">
+            <div className="mode-nav flex items-center gap-1 p-1 rounded-lg bg-[rgba(10,30,18,.6)] border border-[rgba(4,210,128,.22)] w-full max-w-2xl">
               <button 
                 onClick={() => setActiveMode('url')}
                 className={getModeButtonClass('url')}
@@ -439,18 +502,18 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* URL Scanner Mode */}
+          {/* URL Scanner Mode - Mobile optimized */}
           {activeMode === 'url' && (
-            <section aria-labelledby="analyze-title" className="card p-6 sm:p-8">
-              <div className="flex items-start sm:items-center justify-between gap-4 mb-4">
-                <h2 id="analyze-title" className="text-2xl font-bold">{t.analysis.urlScanner.title}</h2>
-                <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold" style={{background:'var(--chip-bg)', color:'var(--text-sub)', border:'1px solid var(--chip-stroke)'}}>{t.home.urlScannerBeta}</span>
+            <section aria-labelledby="analyze-title" className="card p-4 sm:p-6 lg:p-8">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 mb-4">
+                <h2 id="analyze-title" className="text-xl sm:text-2xl font-bold">{t.analysis.urlScanner.title}</h2>
+                <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold self-start sm:self-auto" style={{background:'var(--chip-bg)', color:'var(--text-sub)', border:'1px solid var(--chip-stroke)'}}>{t.home.urlScannerBeta}</span>
             </div>
 
               <form onSubmit={handleUrlSubmit} className="space-y-4">
-              <div className="flex flex-col sm:flex-row gap-3 sm:items-end">
+              <div className="flex flex-col gap-3">
                 <div className="flex-1">
-                    <label htmlFor="url" className="block text-sm font-semibold mb-1">URL</label>
+                    <label htmlFor="url" className="block text-sm font-semibold mb-2">URL</label>
                     <input
                       id="url"
                       type="url"
@@ -471,11 +534,11 @@ export default function HomePage() {
                     <p id="url-help" className="mt-1 text-xs text-[color:var(--muted)]">{t.home.urlHelp}</p>
                     {urlError && <p id="url-error" className="mt-1 text-xs text-red-400">{urlError}</p>}
                 </div>
-                  <div className="flex gap-2 w-full sm:w-auto">
+                  <div className="flex gap-2">
                     <button
                       type="submit"
                       disabled={loading}
-                      className="btn w-full sm:w-auto px-6 py-3 inline-flex items-center justify-center gap-2"
+                      className="btn w-full px-6 py-3 gap-2"
                     >
                       {loading && (
                         <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -492,19 +555,19 @@ export default function HomePage() {
             </section>
           )}
 
-          {/* Fact Check Mode */}
+          {/* Fact Check Mode - Mobile optimized */}
           {activeMode === 'fact-check' && (
-            <section className="card p-6 sm:p-8">
-              <div className="text-center mb-6">
-                <div className="inline-block bg-green-500 text-white px-4 py-2 rounded-lg font-semibold text-sm">
+            <section className="card p-4 sm:p-6 lg:p-8">
+              <div className="text-center mb-4 sm:mb-6">
+                <div className="inline-block bg-green-500 text-white px-3 sm:px-4 py-2 rounded-lg font-semibold text-sm">
                   {t.home.comingSoonBanner}
                 </div>
               </div>
-              <div className="flex items-start sm:items-center justify-between gap-4 mb-4">
-                <h2 className="text-2xl font-bold">{t.home.factCheckTitle}</h2>
-                <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold" style={{background:'var(--chip-bg)', color:'var(--text-sub)', border:'1px solid var(--chip-stroke)'}}>{t.home.beta}</span>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 mb-4">
+                <h2 className="text-xl sm:text-2xl font-bold">{t.home.factCheckTitle}</h2>
+                <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold self-start sm:self-auto" style={{background:'var(--chip-bg)', color:'var(--text-sub)', border:'1px solid var(--chip-stroke)'}}>{t.home.beta}</span>
               </div>
-              <form onSubmit={handleFactSubmit} className="space-y-6">
+              <form onSubmit={handleFactSubmit} className="space-y-4 sm:space-y-6">
                 <div>
                   <label htmlFor="fact-text" className="block text-sm font-semibold mb-2">{t.home.factDescription}</label>
                   <textarea 
@@ -525,13 +588,13 @@ export default function HomePage() {
                 {factImagePreview && (
                   <div className="border border-[color:var(--chip-stroke)] rounded-lg p-4 bg-[rgba(10,30,18,.35)]">
                     <p className="text-sm font-medium mb-2">{t.home.imagePreview}</p>
-                    <img src={factImagePreview} alt="Preview" className="max-w-full h-auto max-h-48 rounded" />
+                    <img src={factImagePreview} alt="Preview" className="max-w-full h-auto max-h-48 rounded mx-auto" />
                   </div>
                 )}
                 <button 
                   type="button" 
                   onClick={handleComingSoonClick}
-                  className="btn w-full px-6 py-3 inline-flex items-center justify-center gap-2 opacity-75 cursor-not-allowed"
+                  className="btn w-full px-6 py-3 gap-2 opacity-75 cursor-not-allowed"
                 >
                   <span>{t.home.comingSoonButton}</span>
                 </button>
@@ -540,20 +603,20 @@ export default function HomePage() {
             </section>
           )}
 
-          {/* Data Check Mode */}
+          {/* Data Check Mode - Mobile optimized */}
           {activeMode === 'data-check' && (
-            <section className="card p-6 sm:p-8">
-              <div className="text-center mb-6">
-                <div className="inline-block bg-green-500 text-white px-4 py-2 rounded-lg font-semibold text-sm">
+            <section className="card p-4 sm:p-6 lg:p-8">
+              <div className="text-center mb-4 sm:mb-6">
+                <div className="inline-block bg-green-500 text-white px-3 sm:px-4 py-2 rounded-lg font-semibold text-sm">
                   {t.home.comingSoonBanner}
                 </div>
               </div>
-              <div className="flex items-start sm:items-center justify-between gap-4 mb-4">
-                <h2 className="text-2xl font-bold">{t.home.dataSearch}</h2>
-                <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold" style={{background:'var(--chip-bg)', color:'var(--text-sub)', border:'1px solid var(--chip-stroke)'}}>{t.home.beta}</span>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 mb-4">
+                <h2 className="text-xl sm:text-2xl font-bold">{t.home.dataSearch}</h2>
+                <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold self-start sm:self-auto" style={{background:'var(--chip-bg)', color:'var(--text-sub)', border:'1px solid var(--chip-stroke)'}}>{t.home.beta}</span>
               </div>
-              <form onSubmit={handleDataSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <form onSubmit={handleDataSubmit} className="space-y-4 sm:space-y-6">
+                <div className="form-grid grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="phone" className="block text-sm font-semibold mb-2">{t.analysis.dataChecker.phoneLabel}</label>
                     <input id="phone" name="phone" type="tel" value={dataForm.phone} onChange={handleDataInputChange} placeholder={t.home.phonePlaceholder} className="input w-full px-4 py-3" />
@@ -585,7 +648,7 @@ export default function HomePage() {
                 <button 
                   type="button" 
                   onClick={handleComingSoonClick}
-                  className="btn w-full px-6 py-3 inline-flex items-center justify-center gap-2 opacity-75 cursor-not-allowed"
+                  className="btn w-full px-6 py-3 gap-2 opacity-75 cursor-not-allowed"
                 >
                   <span>{t.home.comingSoonButton}</span>
                 </button>
@@ -594,19 +657,19 @@ export default function HomePage() {
             </section>
           )}
 
-          {/* Fraud Detector Mode */}
+          {/* Fraud Detector Mode - Mobile optimized */}
           {activeMode === 'fraud-detector' && (
-            <section className="card p-6 sm:p-8">
-              <div className="text-center mb-6">
-                <div className="inline-block bg-green-500 text-white px-4 py-2 rounded-lg font-semibold text-sm">
+            <section className="card p-4 sm:p-6 lg:p-8">
+              <div className="text-center mb-4 sm:mb-6">
+                <div className="inline-block bg-green-500 text-white px-3 sm:px-4 py-2 rounded-lg font-semibold text-sm">
                   {t.home.comingSoonBanner}
                 </div>
               </div>
-              <div className="flex items-start sm:items-center justify-between gap-4 mb-4">
-                <h2 className="text-2xl font-bold">{t.home.fraudAnalysis}</h2>
-                <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold" style={{background:'var(--chip-bg)', color:'var(--text-sub)', border:'1px solid var(--chip-stroke)'}}>{t.home.beta}</span>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 mb-4">
+                <h2 className="text-xl sm:text-2xl font-bold">{t.home.fraudAnalysis}</h2>
+                <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold self-start sm:self-auto" style={{background:'var(--chip-bg)', color:'var(--text-sub)', border:'1px solid var(--chip-stroke)'}}>{t.home.beta}</span>
               </div>
-              <form onSubmit={handleFraudSubmit} className="space-y-6">
+              <form onSubmit={handleFraudSubmit} className="space-y-4 sm:space-y-6">
                 <div>
                   <label htmlFor="fraud-text" className="block text-sm font-semibold mb-2">{t.home.situationDescription}</label>
                   <textarea 
@@ -643,7 +706,7 @@ export default function HomePage() {
                 <button 
                   type="button" 
                   onClick={handleComingSoonClick}
-                  className="btn w-full px-6 py-3 inline-flex items-center justify-center gap-2 opacity-75 cursor-not-allowed"
+                  className="btn w-full px-6 py-3 gap-2 opacity-75 cursor-not-allowed"
                 >
                   <span>{t.home.comingSoonButton}</span>
                 </button>
@@ -652,40 +715,40 @@ export default function HomePage() {
             </section>
           )}
 
-          {/* What we check */}
-          <section id="features" aria-labelledby="features-title" className="card p-6 sm:p-8">
-            <h2 id="features-title" className="text-2xl font-bold mb-4">
+          {/* What we check - Mobile optimized */}
+          <section id="features" aria-labelledby="features-title" className="card p-4 sm:p-6 lg:p-8">
+            <h2 id="features-title" className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
               {activeMode === 'url' ? t.home.urlScannerWhatWeCheck : t.home.whatWeCheck}
             </h2>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+            <ul className="features-grid grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               {activeMode === 'url' && (
                 <>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" strokeLinecap="round" strokeLinejoin="round"/><path d="m9 12 2 2 4-4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" strokeLinecap="round" strokeLinejoin="round"/><path d="m9 12 2 2 4-4" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <div>
-                      <p className="font-semibold">{t.home.domainReputation}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.domainReputationDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.domainReputation}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.domainReputationDesc}</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M7 11V7a5 5 0 0 1 10 0v4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M7 11V7a5 5 0 0 1 10 0v4" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <div>
-                      <p className="font-semibold">{t.home.tlsSsl}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.tlsSslDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.tlsSsl}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.tlsSslDesc}</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M2 12s2-2 5-2 5 2 5 2 2-2 5-2 5 2 5 2" strokeLinecap="round" strokeLinejoin="round"/><path d="M10 20s2-2 5-2 5 2 5 2" strokeLinecap="round" strokeLinejoin="round"/><path d="M4 14s2-2 5-2 5 2 5 2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M2 12s2-2 5-2 5 2 5 2 2-2 5-2 5 2 5 2" strokeLinecap="round" strokeLinejoin="round"/><path d="M10 20s2-2 5-2 5 2 5 2" strokeLinecap="round" strokeLinejoin="round"/><path d="M4 14s2-2 5-2 5 2 5 2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <div>
-                      <p className="font-semibold">{t.home.contentRisks}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.contentRisksDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.contentRisks}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.contentRisksDesc}</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="9" cy="7" r="4" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="9" cy="7" r="4" /></svg>
                     <div>
-                      <p className="font-semibold">{t.home.databaseMatching}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.databaseMatchingDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.databaseMatching}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.databaseMatchingDesc}</p>
                     </div>
                   </li>
                 </>
@@ -693,31 +756,31 @@ export default function HomePage() {
               {activeMode === 'fact-check' && (
                 <>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="12" r="9" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="12" r="9" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <div>
-                      <p className="font-semibold">{t.home.factCheckFeatures.truthfulnessRating}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.factCheckFeatures.truthfulnessRatingDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.factCheckFeatures.truthfulnessRating}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.factCheckFeatures.truthfulnessRatingDesc}</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" strokeLinecap="round" strokeLinejoin="round"/><polyline points="14,2 14,8 20,8" strokeLinecap="round" strokeLinejoin="round"/><line x1="16" y1="13" x2="8" y2="13" strokeLinecap="round" strokeLinejoin="round"/><line x1="16" y1="17" x2="8" y2="17" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" strokeLinecap="round" strokeLinejoin="round"/><polyline points="14,2 14,8 20,8" strokeLinecap="round" strokeLinejoin="round"/><line x1="16" y1="13" x2="8" y2="13" strokeLinecap="round" strokeLinejoin="round"/><line x1="16" y1="17" x2="8" y2="17" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <div>
-                      <p className="font-semibold">{t.home.factCheckFeatures.sourcesQuotes}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.factCheckFeatures.sourcesQuotesDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.factCheckFeatures.sourcesQuotes}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.factCheckFeatures.sourcesQuotesDesc}</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="10" strokeLinecap="round" strokeLinejoin="round"/><polyline points="12,6 12,12 16,14" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="10" strokeLinecap="round" strokeLinejoin="round"/><polyline points="12,6 12,12 16,14" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <div>
-                      <p className="font-semibold">{t.home.factCheckFeatures.contextChronology}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.factCheckFeatures.contextChronologyDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.factCheckFeatures.contextChronology}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.factCheckFeatures.contextChronologyDesc}</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" strokeLinecap="round" strokeLinejoin="round"/><line x1="12" y1="9" x2="12" y2="13" strokeLinecap="round" strokeLinejoin="round"/><line x1="12" y1="17" x2="12.01" y2="17" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" strokeLinecap="round" strokeLinejoin="round"/><line x1="12" y1="9" x2="12" y2="13" strokeLinecap="round" strokeLinejoin="round"/><line x1="12" y1="17" x2="12.01" y2="17" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <div>
-                      <p className="font-semibold">{t.home.factCheckFeatures.manipulationDetection}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.factCheckFeatures.manipulationDetectionDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.factCheckFeatures.manipulationDetection}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.factCheckFeatures.manipulationDetectionDesc}</p>
                     </div>
                   </li>
                 </>
@@ -725,31 +788,31 @@ export default function HomePage() {
               {activeMode === 'data-check' && (
                 <>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <div>
-                      <p className="font-semibold">{t.home.dataCheckFeatures.contactsCheck}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.dataCheckFeatures.contactsCheckDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.dataCheckFeatures.contactsCheck}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.dataCheckFeatures.contactsCheckDesc}</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="7" r="4" /></svg>
                     <div>
-                      <p className="font-semibold">{t.home.dataCheckFeatures.personsProfiles}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.dataCheckFeatures.personsProfilesDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.dataCheckFeatures.personsProfiles}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.dataCheckFeatures.personsProfilesDesc}</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" strokeLinecap="round" strokeLinejoin="round"/><polyline points="9,22 9,12 15,12 15,22" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <div>
-                      <p className="font-semibold">{t.home.dataCheckFeatures.companiesOrganizations}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.dataCheckFeatures.companiesOrganizationsDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.dataCheckFeatures.companiesOrganizations}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.dataCheckFeatures.companiesOrganizationsDesc}</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" strokeLinecap="round" strokeLinejoin="round"/><path d="M16 3.13a4 4 0 0 1 0 7.75" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <div>
-                      <p className="font-semibold">{t.home.dataCheckFeatures.relatedEntities}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.dataCheckFeatures.relatedEntitiesDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.dataCheckFeatures.relatedEntities}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.dataCheckFeatures.relatedEntitiesDesc}</p>
                     </div>
                   </li>
                 </>
@@ -757,31 +820,31 @@ export default function HomePage() {
               {activeMode === 'fraud-detector' && (
                 <>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" strokeLinecap="round" strokeLinejoin="round"/><line x1="12" y1="9" x2="12" y2="13" strokeLinecap="round" strokeLinejoin="round"/><line x1="12" y1="17" x2="12.01" y2="17" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" strokeLinecap="round" strokeLinejoin="round"/><line x1="12" y1="9" x2="12" y2="13" strokeLinecap="round" strokeLinejoin="round"/><line x1="12" y1="17" x2="12.01" y2="17" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <div>
-                      <p className="font-semibold">{t.home.fraudDetectorFeatures.phishingSignals}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.fraudDetectorFeatures.phishingSignalsDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.fraudDetectorFeatures.phishingSignals}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.fraudDetectorFeatures.phishingSignalsDesc}</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2" ry="2" strokeLinecap="round" strokeLinejoin="round"/><line x1="1" y1="10" x2="23" y2="10" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <div>
-                      <p className="font-semibold">{t.home.fraudDetectorFeatures.financialRisks}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.fraudDetectorFeatures.financialRisksDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.fraudDetectorFeatures.financialRisks}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.fraudDetectorFeatures.financialRisksDesc}</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="12" r="9" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <div>
-                      <p className="font-semibold">{t.home.fraudDetectorFeatures.requisitesCheck}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.fraudDetectorFeatures.requisitesCheckDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.fraudDetectorFeatures.requisitesCheck}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.fraudDetectorFeatures.requisitesCheckDesc}</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 icon-glow mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M9 11l3 3L22 4" strokeLinecap="round" strokeLinejoin="round"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <div>
-                      <p className="font-semibold">{t.home.fraudDetectorFeatures.practicalSteps}</p>
-                      <p className="text-sm text-[color:var(--text-sub)]">{t.home.fraudDetectorFeatures.practicalStepsDesc}</p>
+                      <p className="font-semibold text-sm sm:text-base">{t.home.fraudDetectorFeatures.practicalSteps}</p>
+                      <p className="text-xs sm:text-sm text-[color:var(--text-sub)] mt-1">{t.home.fraudDetectorFeatures.practicalStepsDesc}</p>
                     </div>
                   </li>
                 </>
@@ -789,31 +852,32 @@ export default function HomePage() {
             </ul>
           </section>
 
-          {/* Disclaimer */}
-          <section className="text-center px-4">
+          {/* Disclaimer - Mobile optimized */}
+          <section className="text-center px-4 sm:px-2">
                           <p className="text-xs sm:text-sm italic text-[color:var(--text-sub)] opacity-80">{t.home.resultsDisclaimer}</p>
           </section>
       </main>
 
-        <footer role="contentinfo" className="w-full mt-6 py-6 text-center text-[color:var(--text-sub)] text-sm opacity-70 border-t border-[color:var(--chip-stroke)]">
-          <div className="flex flex-col items-center gap-3">
-            <div className="flex items-center gap-3">
-              <button className="btn px-3 py-1 text-xs" onClick={() => router.push('/donate')}>
+        {/* Footer - Mobile optimized */}
+        <footer role="contentinfo" className="w-full mt-4 sm:mt-6 py-4 sm:py-6 text-center text-[color:var(--text-sub)] text-sm opacity-70 border-t border-[color:var(--chip-stroke)]">
+          <div className="flex flex-col items-center gap-3 px-4">
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
+              <button className="btn px-4 py-2 text-xs sm:text-sm min-w-[120px]" onClick={() => router.push('/donate')}>
                 {t.home.thankYouButton}
               </button>
-              <button className="btn px-3 py-1 text-xs" onClick={() => router.push('/report')}>
+              <button className="btn px-4 py-2 text-xs sm:text-sm min-w-[120px]" onClick={() => router.push('/report')}>
                 {t.home.sendReport}
               </button>
             </div>
-            <small>&copy; {new Date().getFullYear()} SafestNet v.1.0</small>
+            <small className="text-xs">&copy; {new Date().getFullYear()} SafestNet v.1.0</small>
           </div>
       </footer>
       </div>
 
-      {/* Coming Soon Modal */}
+      {/* Coming Soon Modal - Mobile optimized */}
       {showComingSoonModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{background: 'var(--bg)'}}>
-          <div className="bg-black border border-[color:var(--chip-stroke)] rounded-lg p-6 max-w-md w-full">
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{background: 'rgba(0,0,0,0.8)'}}>
+          <div className="bg-black border border-[color:var(--chip-stroke)] rounded-lg p-6 max-w-md w-full mx-4">
             <div className="text-center">
               <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -821,7 +885,7 @@ export default function HomePage() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold mb-3">{t.home.comingSoonModalTitle}</h3>
-              <p className="text-[color:var(--text-sub)] mb-6">{t.home.comingSoonModalMessage}</p>
+              <p className="text-[color:var(--text-sub)] mb-6 text-sm">{t.home.comingSoonModalMessage}</p>
               <button 
                 onClick={() => setShowComingSoonModal(false)}
                 className="btn px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg"
