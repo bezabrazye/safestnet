@@ -16,6 +16,6 @@ RUN npm ci --omit=dev
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 EXPOSE 8080
-CMD ["sh", "-c", "node node_modules/next/dist/bin/next start -p $PORT"]
+CMD ["sh", "-c", "node node_modules/next/dist/bin/next start -H 0.0.0.0 -p $PORT"]
 
 
