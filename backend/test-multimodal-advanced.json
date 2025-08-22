@@ -1,0 +1,7 @@
+{
+  "url": "https://secure-login-paypal.com-session-verify.co/claim",
+  "text": "Ваш аккаунт PayPal будет заблокирован в течение 24 часов. Срочно перейдите по ссылке и подтвердите данные. Это последний шанс!",
+  "images": ["https://example.com/suspicious_paypal_screenshot.png"],
+  "comment": "Получил это письмо от PayPal, но URL выглядит странно",
+  "locale": "ru"
+}
