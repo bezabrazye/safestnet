@@ -1,0 +1,40 @@
+options:
+  substitutionOption: ALLOW_LOOSE
+
+substitutions:
+  _SERVICE: backend
+  _REGION: europe-west1
+
+steps:
+  - id: Build image
+    name: gcr.io/cloud-builders/docker
+    dir: .
+    args:
+      - build
+      - -t
+      - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run/backend:$COMMIT_SHA
+      - .
+
+  - id: Push image
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run/backend:$COMMIT_SHA
+
+  - id: Deploy to Cloud Run
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        gcloud run deploy ${_SERVICE} \
+          --image europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run/backend:$COMMIT_SHA \
+          --region ${_REGION} \
+          --allow-unauthenticated \
+          --port 8080 \
+          --set-env-vars "NODE_ENV=production,PORT=8080,MONGODB_URI=${_MONGODB_URI},MONGODB_DB=${_MONGODB_DB},OPENAI_API_KEY=${_OPENAI_API_KEY},VIRUSTOTAL_API_KEY=${_VIRUSTOTAL_API_KEY},GSB_API_KEY=${_GSB_API_KEY},ADMIN_USER=${_ADMIN_USER},ADMIN_PASS=${_ADMIN_PASS},ADMIN_JWT_SECRET=${_ADMIN_JWT_SECRET}"
+
+images:
+  - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run/backend:$COMMIT_SHA
+
+

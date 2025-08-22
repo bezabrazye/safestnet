@@ -1,0 +1,40 @@
+options:
+  substitutionOption: ALLOW_LOOSE
+
+substitutions:
+  _SERVICE: frontend
+  _REGION: europe-west1
+
+steps:
+  - id: Build image
+    name: gcr.io/cloud-builders/docker
+    dir: .
+    args:
+      - build
+      - -t
+      - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run/frontend:$COMMIT_SHA
+      - .
+
+  - id: Push image
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run/frontend:$COMMIT_SHA
+
+  - id: Deploy to Cloud Run
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        gcloud run deploy ${_SERVICE} \
+          --image europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run/frontend:$COMMIT_SHA \
+          --region ${_REGION} \
+          --allow-unauthenticated \
+          --port 8080 \
+          --set-env-vars "NODE_ENV=production,PORT=8080,NEXT_PUBLIC_SITE_URL=${_NEXT_PUBLIC_SITE_URL},BACKEND_URL=${_BACKEND_URL},NEXTAUTH_URL=${_NEXTAUTH_URL},NEXTAUTH_SECRET=${_NEXTAUTH_SECRET},GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID},GOOGLE_CLIENT_SECRET=${_GOOGLE_CLIENT_SECRET},NEXT_PUBLIC_RECAPTCHA_SITE_KEY=${_NEXT_PUBLIC_RECAPTCHA_SITE_KEY},RECAPTCHA_SECRET=${_RECAPTCHA_SECRET}"
+
+images:
+  - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run/frontend:$COMMIT_SHA
+
+
