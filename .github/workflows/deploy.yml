@@ -1,0 +1,93 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+      - initial-setup
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy-backend:
+    name: Deploy Backend (Cloud Run)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Auth to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Deploy backend to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ secrets.BACKEND_SERVICE }}
+          region: ${{ secrets.GCP_REGION }}
+          source: ./backend
+          allow_unauthenticated: true
+          env_vars: |
+            NODE_ENV=production
+            PORT=8080
+            MONGODB_URI=${{ secrets.MONGODB_URI }}
+            MONGODB_DB=${{ secrets.MONGODB_DB }}
+            OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+            VIRUSTOTAL_API_KEY=${{ secrets.VIRUSTOTAL_API_KEY }}
+            GSB_API_KEY=${{ secrets.GSB_API_KEY }}
+            ADMIN_USER=${{ secrets.ADMIN_USER }}
+            ADMIN_PASS=${{ secrets.ADMIN_PASS }}
+            ADMIN_JWT_SECRET=${{ secrets.ADMIN_JWT_SECRET }}
+
+      - name: Backend URL
+        run: echo "Backend deployed: ${{ steps.deploy-backend.outputs.url || '' }}"
+
+  deploy-frontend:
+    name: Deploy Frontend (Cloud Run)
+    runs-on: ubuntu-latest
+    needs: deploy-backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Auth to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Deploy frontend to Cloud Run
+        id: deploy-frontend
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ secrets.FRONTEND_SERVICE }}
+          region: ${{ secrets.GCP_REGION }}
+          source: ./frontend
+          allow_unauthenticated: true
+          env_vars: |
+            NODE_ENV=production
+            PORT=8080
+            NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
+            BACKEND_URL=${{ secrets.BACKEND_URL }}
+            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
+            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+            NEXT_PUBLIC_HCAPTCHA_SITE_KEY=${{ secrets.NEXT_PUBLIC_HCAPTCHA_SITE_KEY }}
+
+      - name: Frontend URL
+        run: echo "Frontend deployed: ${{ steps.deploy-frontend.outputs.url || '' }}"
+
+
