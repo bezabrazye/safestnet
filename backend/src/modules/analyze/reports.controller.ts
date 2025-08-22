@@ -92,6 +92,12 @@ export class ReportsController {
     return { ok: true, id: item.id };
   }
 
+  // Public alias to keep API paths consistent with frontend
+  @Post('public/reports')
+  async createReportPublic(@Body() body: any) {
+    return this.createReport(body);
+  }
+
   @Post('admin/login')
   login(@Body() body: any) {
     const user = String(body?.username || '');
