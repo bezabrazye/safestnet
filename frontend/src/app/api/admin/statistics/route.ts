@@ -4,8 +4,8 @@ export async function GET(request: NextRequest) {
   try {
     const user = request.headers.get('x-admin-user') || '';
     const pass = request.headers.get('x-admin-pass') || '';
-    
-    const resp = await fetch('http://localhost:8080/admin/statistics', {
+    const backend = (process.env.BACKEND_URL || 'http://localhost:8080').replace(/\/$/, '');
+    const resp = await fetch(`${backend}/admin/statistics`, {
       headers: { 'x-admin-user': user, 'x-admin-pass': pass }
     });
     const data = await resp.json();

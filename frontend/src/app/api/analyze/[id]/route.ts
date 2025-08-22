@@ -5,31 +5,14 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  
   try {
-    // Проксируем запрос к реальному API
-    const backend = process.env.BACKEND_URL || 'http://localhost:8080';
-    const response = await fetch(`${backend.replace(/\/$/, '')}/analyze/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const backend = (process.env.BACKEND_URL || 'http://localhost:8080').replace(/\/$/, '');
+    const response = await fetch(`${backend}/analyze/${id}`, {
+      headers: { 'Content-Type': 'application/json' },
     });
-
-    if (!response.ok) {
-      return NextResponse.json(
-        { error: 'Результат анализа не найден' },
-        { status: response.status }
-      );
-    }
-
     const data = await response.json();
-    return NextResponse.json(data);
-  } catch (error) {
-    console.error('Error fetching from backend:', error);
-    return NextResponse.json(
-      { error: 'Ошибка сервера' },
-      { status: 500 }
-    );
+    return NextResponse.json(data, { status: response.status });
+  } catch (e) {
+    return NextResponse.json({ error: 'server' }, { status: 500 });
   }
 }

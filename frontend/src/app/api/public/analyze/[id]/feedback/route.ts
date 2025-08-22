@@ -9,8 +9,8 @@ export async function POST(
   try {
     const body = await request.json();
     const fwd = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '';
-    
-    const response = await fetch(`http://localhost:8080/analyze/${id}/feedback`, {
+    const backend = (process.env.BACKEND_URL || 'http://localhost:8080').replace(/\/$/, '');
+    const response = await fetch(`${backend}/analyze/${id}/feedback`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

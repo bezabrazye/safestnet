@@ -6,8 +6,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const locale = request.headers.get('x-locale') || 'en';
     
-    const backend = process.env.BACKEND_URL || 'http://localhost:8080';
-    const response = await fetch(`${backend.replace(/\/$/, '')}/analyze/url`, {
+    const backend = (process.env.BACKEND_URL || 'http://localhost:8080').replace(/\/$/, '');
+    const response = await fetch(`${backend}/analyze/url`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

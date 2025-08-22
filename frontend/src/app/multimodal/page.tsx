@@ -114,7 +114,7 @@ export default function MultimodalPage() {
       router.push(`/result/${result.id}`);
     } catch (err) {
       console.error(err);
-      setStatus('Network error. Is backend running on http://localhost:8080?');
+      setStatus('Network error. Please try again later.');
     } finally {
       setLoading(false);
     }

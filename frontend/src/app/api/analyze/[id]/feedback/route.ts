@@ -5,33 +5,17 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  
   try {
     const body = await request.json();
-    
-    // Проксируем запрос к реальному API
-    const response = await fetch(`http://localhost:8080/analyze/${id}/feedback`, {
+    const backend = (process.env.BACKEND_URL || 'http://localhost:8080').replace(/\/$/, '');
+    const response = await fetch(`${backend}/analyze/${id}/feedback`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
-
-    if (!response.ok) {
-      return NextResponse.json(
-        { error: 'Не удалось отправить отзыв' },
-        { status: response.status }
-      );
-    }
-
     const data = await response.json();
-    return NextResponse.json(data);
-  } catch (error) {
-    console.error('Error sending feedback to backend:', error);
-    return NextResponse.json(
-      { error: 'Ошибка сервера' },
-      { status: 500 }
-    );
+    return NextResponse.json(data, { status: response.status });
+  } catch (e) {
+    return NextResponse.json({ error: 'server' }, { status: 500 });
   }
 }

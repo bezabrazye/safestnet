@@ -7,7 +7,8 @@ export async function GET(
   const { id } = await params;
   
   try {
-    const response = await fetch(`http://localhost:8080/analyze/${id}`, {
+    const backend = (process.env.BACKEND_URL || 'http://localhost:8080').replace(/\/$/, '');
+    const response = await fetch(`${backend}/analyze/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
