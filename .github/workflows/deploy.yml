@@ -49,9 +49,7 @@ jobs:
             ADMIN_JWT_SECRET=${{ secrets.ADMIN_JWT_SECRET }}
 
       - name: Backend URL
-        run: echo "Backend deployed: $URL"
-        env:
-          URL: ${{ steps.deploy-backend.outputs.url }}
+        run: echo "::notice title=Backend URL::${{ steps.deploy-backend.outputs.url }}"
 
   deploy-frontend:
     name: Deploy Frontend (Cloud Run)
@@ -91,8 +89,6 @@ jobs:
             NEXT_PUBLIC_HCAPTCHA_SITE_KEY=${{ secrets.NEXT_PUBLIC_HCAPTCHA_SITE_KEY }}
 
       - name: Frontend URL
-        run: echo "Frontend deployed: $URL"
-        env:
-          URL: ${{ steps.deploy-frontend.outputs.url }}
+        run: echo "::notice title=Frontend URL::${{ steps.deploy-frontend.outputs.url }}"
 
 
