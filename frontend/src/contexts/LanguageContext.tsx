@@ -12,13 +12,17 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('ru');
+  const [language, setLanguageState] = useState<Language>('en');
 
   // Загружаем язык из localStorage при инициализации
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language') as Language;
     if (savedLanguage && ['en', 'ru', 'lv'].includes(savedLanguage)) {
       setLanguageState(savedLanguage);
+    } else {
+      // Установить EN по умолчанию при первом визите
+      localStorage.setItem('language', 'en');
+      setLanguageState('en');
     }
   }, []);
 
